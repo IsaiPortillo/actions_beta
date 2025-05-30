@@ -21,7 +21,7 @@ jobs:
           password: ${{ env.MAIL_PASSWORD }}
           subject: "Nuevo Pull Request a main requiere revisión"
           to: ${{ env.MAIL_TO }}
-          from: ${{ secrets.MAIL_USERNAME }}
+          from: ${{ env.MAIL_USERNAME }}
           body: |
             Se ha abierto un nuevo Pull Request hacia main en ${{ github.repository }}.
             Revisa el siguiente enlace: ${{ github.event.pull_request.html_url }}
