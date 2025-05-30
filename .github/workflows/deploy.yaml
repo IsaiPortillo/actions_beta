@@ -3,12 +3,25 @@ name: "Hola Mundo"
 on: 
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
+    types: [opened, reopened]
 
 jobs:
-  deploy-codigofacilito:
+  notify-by-email:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hacemos pull del codigo"
-      - run: echo "Correr migraciones"
-      - run: echo "Correr pruebas"
-      - run: echo "Hacemos deploy a produccion"
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Nuevo Pull Request a main requiere revisión"
+          to: ${{ secrets.MAIL_TO }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: |
+            Se ha abierto un nuevo Pull Request hacia main en ${{ github.repository }}.
+            Revisa el siguiente enlace: ${{ github.event.pull_request.html_url }}
